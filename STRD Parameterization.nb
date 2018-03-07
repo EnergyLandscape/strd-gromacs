@@ -1,0 +1,1325 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     53949,       1316]
+NotebookOptionsPosition[     51872,       1238]
+NotebookOutlinePosition[     52392,       1257]
+CellTagsIndexPosition[     52349,       1254]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["STRD Visual Parameterization", "Title",
+ CellChangeTimes->{{3.707000201972379*^9, 3.707000215493229*^9}}],
+
+Cell["An interactive tool for choosing STRD collision parameters.", "Subtitle",
+ CellChangeTimes->{{3.7070002277395744`*^9, 3.707000249154558*^9}, {
+  3.7070023384228907`*^9, 3.70700234839643*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Simulation parameters (change these)", "Section",
+ CellChangeTimes->{{3.7070003521044416`*^9, 3.707000363502584*^9}, {
+  3.7070005931105385`*^9, 3.707000595278847*^9}, {3.7070008180177736`*^9, 
+  3.707000849231592*^9}, {3.7070020977378993`*^9, 3.707002105832833*^9}, {
+  3.707002153058634*^9, 3.7070021586846576`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"tstep", "=", "0.020"}], " ", ";"}], " ", 
+  RowBox[{"(*", " ", "ps", " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"T", "=", "310"}], ";"}], " ", 
+  RowBox[{"(*", " ", "K", " ", "*)"}]}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.7070008035419197`*^9, 3.7070008151548634`*^9}, {
+  3.7070020925080776`*^9, 3.7070020937499824`*^9}, {3.7070021437568955`*^9, 
+  3.7070021512265263`*^9}, {3.707007036639223*^9, 3.7070070727486577`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Constants and STRD equations (do not change)", "Section",
+ CellChangeTimes->{{3.7070003521044416`*^9, 3.707000363502584*^9}, {
+  3.7070005931105385`*^9, 3.707000595278847*^9}, {3.7070008254351015`*^9, 
+  3.707000842548766*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "physical", " ", "constants", " ", "and", " ", "unit", " ", 
+    "definitions"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"k", "=", 
+     RowBox[{"1.3806488", "\[Times]", 
+      SuperscriptBox["10", 
+       RowBox[{"-", "23"}]]}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"amu", "=", 
+     RowBox[{"1.6605402", "*", 
+      SuperscriptBox["10", 
+       RowBox[{"-", "27"}]]}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"nm", "=", 
+     SuperscriptBox["10", 
+      RowBox[{"-", "9"}]]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ps", "=", 
+     SuperscriptBox["10", 
+      RowBox[{"-", "12"}]]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"deg", "=", 
+     FractionBox["\[Pi]", "180"]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"cP", "=", 
+     SuperscriptBox["10", "3"]}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"conversion", " ", 
+     RowBox[{"factor", ":", " ", 
+      RowBox[{
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"kg", "/", "m"}], "*", "s"}], "]"}], " ", 
+       RowBox[{"or", " ", "[", 
+        RowBox[{"Pa", "*", "s"}], "]"}], " ", 
+       RowBox[{"to", " ", "[", "cP", "]"}]}]}]}], " ", "*)"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"equations", " ", "for", " ", "SRD"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Rho]", "[", 
+      RowBox[{"M_", ",", "m_", ",", "a_"}], "]"}], ":=", 
+     RowBox[{"(", 
+      FractionBox[
+       RowBox[{"M", "*", "m"}], 
+       SuperscriptBox["a", "3"]], ")"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Nu]kin", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"(", 
+       FractionBox[
+        RowBox[{"k", " ", "T", " ", "\[CapitalDelta]t"}], 
+        RowBox[{"2", "m"}]], ")"}], 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{"5", "M"}], 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"M", "-", "1", "+", 
+            SuperscriptBox["\[ExponentialE]", 
+             RowBox[{"-", "M"}]]}], ")"}], 
+          RowBox[{"(", 
+           RowBox[{"2", "-", 
+            RowBox[{"Cos", "[", "\[Alpha]", "]"}], "-", 
+            RowBox[{"Cos", "[", 
+             RowBox[{"2", "\[Alpha]"}], "]"}]}], ")"}]}]], "-", "1"}], ")"}], 
+      " ", "cP"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Mu]kin", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"\[Rho]", "[", 
+       RowBox[{"M", ",", "m", ",", "a"}], "]"}], "*", 
+      RowBox[{"(", 
+       FractionBox[
+        RowBox[{"k", " ", "T", " ", "\[CapitalDelta]t"}], 
+        RowBox[{"2", "m"}]], ")"}], 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{"5", "M"}], 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"M", "-", "1", "+", 
+            SuperscriptBox["\[ExponentialE]", 
+             RowBox[{"-", "M"}]]}], ")"}], 
+          RowBox[{"(", 
+           RowBox[{"2", "-", 
+            RowBox[{"Cos", "[", "\[Alpha]", "]"}], "-", 
+            RowBox[{"Cos", "[", 
+             RowBox[{"2", "\[Alpha]"}], "]"}]}], ")"}]}]], "-", "1"}], ")"}], 
+      " ", "cP"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Nu]col", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"(", 
+       FractionBox[
+        SuperscriptBox["a", "2"], "\[CapitalDelta]t"], ")"}], 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{"(", 
+          RowBox[{"M", "-", "1", "+", 
+           SuperscriptBox["\[ExponentialE]", 
+            RowBox[{"-", "M"}]]}], ")"}], 
+         RowBox[{"6", 
+          RowBox[{"(", "3", ")"}], "M"}]], 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"Cos", "[", "\[Alpha]", "]"}]}], ")"}]}], ")"}], " ", 
+      "cP"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Mu]col", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"\[Rho]", "[", 
+       RowBox[{"M", ",", "m", ",", "a"}], "]"}], "*", 
+      RowBox[{"(", 
+       FractionBox[
+        SuperscriptBox["a", "2"], "\[CapitalDelta]t"], ")"}], 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{"(", 
+          RowBox[{"M", "-", "1", "+", 
+           SuperscriptBox["\[ExponentialE]", 
+            RowBox[{"-", "M"}]]}], ")"}], 
+         RowBox[{"6", 
+          RowBox[{"(", "3", ")"}], "M"}]], 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"Cos", "[", "\[Alpha]", "]"}]}], ")"}]}], ")"}], " ", 
+      "cP"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Nu]", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"\[Nu]kin", "[", 
+        RowBox[{
+        "\[Alpha]", ",", "\[CapitalDelta]t", ",", "M", ",", "m", ",", "a"}], 
+        "]"}], "+", 
+       RowBox[{"\[Nu]col", "[", 
+        RowBox[{
+        "\[Alpha]", ",", "\[CapitalDelta]t", ",", "M", ",", "m", ",", "a"}], 
+        "]"}]}], ")"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Mu]", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"\[Mu]kin", "[", 
+        RowBox[{
+        "\[Alpha]", ",", "\[CapitalDelta]t", ",", "M", ",", "m", ",", "a"}], 
+        "]"}], "+", 
+       RowBox[{"\[Mu]col", "[", 
+        RowBox[{
+        "\[Alpha]", ",", "\[CapitalDelta]t", ",", "M", ",", "m", ",", "a"}], 
+        "]"}]}], ")"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Ds", "[", 
+      RowBox[{"M_", ",", "\[Alpha]_"}], "]"}], ":=", 
+     RowBox[{
+      FractionBox[
+       RowBox[{"3", "M"}], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"Cos", "[", "\[Alpha]", "]"}]}], ")"}], 
+        RowBox[{"(", 
+         RowBox[{"M", "-", "1", "+", 
+          SuperscriptBox["\[ExponentialE]", 
+           RowBox[{"-", "M"}]]}], ")"}]}]], "-", "1"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Lambda]", "[", 
+      RowBox[{"m_", ",", "\[CapitalDelta]t_"}], "]"}], ":=", 
+     RowBox[{"\[CapitalDelta]t", " ", 
+      SqrtBox[
+       FractionBox[
+        RowBox[{"k", " ", "T"}], "m"]]}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Lambda]c", "[", 
+      RowBox[{
+      "\[Alpha]_", ",", "\[CapitalDelta]t_", ",", "M_", ",", "m_", ",", 
+       "a_"}], "]"}], ":=", 
+     RowBox[{"\[Pi]", 
+      SqrtBox[
+       RowBox[{"2", " ", "\[CapitalDelta]t", " ", 
+        FractionBox[
+         RowBox[{"\[Nu]", "[", 
+          RowBox[{
+          "\[Alpha]", ",", "\[CapitalDelta]t", ",", "M", ",", "m", ",", "a"}],
+           "]"}], "cP"]}]]}]}], ";"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.628023604364721*^9, 3.6280236563806963`*^9}, {
+   3.6280240858342595`*^9, 3.6280240866183043`*^9}, {3.628024915539716*^9, 
+   3.628024926747357*^9}, {3.6314632687960787`*^9, 3.6314632698210945`*^9}, {
+   3.63156395208293*^9, 3.6315639556989856`*^9}, {3.6315639983221855`*^9, 
+   3.631564001106982*^9}, {3.631564185130271*^9, 3.6315641856252785`*^9}, {
+   3.6316298236251926`*^9, 3.631629835385391*^9}, {3.631641506406235*^9, 
+   3.6316415098947897`*^9}, {3.6316415909907007`*^9, 3.631641600165597*^9}, {
+   3.6316471219197283`*^9, 3.6316471264475527`*^9}, {3.631727211947874*^9, 
+   3.6317272320837326`*^9}, 3.6317274951707993`*^9, {3.632886510776884*^9, 
+   3.6328865369205704`*^9}, {3.6328866096549993`*^9, 
+   3.6328866127750473`*^9}, {3.632886725006883*^9, 3.6328867255343914`*^9}, {
+   3.632887147988041*^9, 3.6328871481555433`*^9}, {3.632887222963255*^9, 
+   3.6328872513302183`*^9}, {3.632887425602596*^9, 3.632887440753101*^9}, {
+   3.632939861877205*^9, 3.6329398622597103`*^9}, {3.63294084319036*^9, 
+   3.6329408435403657`*^9}, {3.6331976877462945`*^9, 3.633197730009985*^9}, {
+   3.6452924768569956`*^9, 3.6452924830083475`*^9}, {3.645306236055977*^9, 
+   3.6453062739171424`*^9}, {3.666020075048889*^9, 3.6660201002192755`*^9}, {
+   3.666020213870272*^9, 3.666020259560054*^9}, {3.666022156858345*^9, 
+   3.666022157950347*^9}, {3.7070007641525726`*^9, 3.7070008220384884`*^9}, {
+   3.7070008649119496`*^9, 3.707000871000573*^9}, {3.7070093735518007`*^9, 
+   3.7070093738052015`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["SRD Mean Free Path", "Section",
+ CellChangeTimes->{{3.707000942083438*^9, 3.7070009511066713`*^9}, {
+  3.707009192874874*^9, 3.707009203892214*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Row", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<\[Lambda] = \>\"", ",", 
+      RowBox[{
+       RowBox[{"\[Lambda]", "[", 
+        RowBox[{
+         RowBox[{"72", "amu"}], ",", 
+         RowBox[{"f", "*", "tstep", " ", "ps"}]}], "]"}], 
+       SuperscriptBox["nm", 
+        RowBox[{"-", "1"}]]}], ",", "\"\< nm\>\""}], "}"}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", ",", "10", ",", "\"\<Collision Interval (steps)\>\""}], 
+      "}"}], ",", "1", ",", "100", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.666030842043283*^9, 3.666030842183285*^9}, {
+  3.707000954520784*^9, 3.707001035444087*^9}, {3.707001087820492*^9, 
+  3.7070011991129074`*^9}, {3.7070012542869134`*^9, 3.7070012583826294`*^9}, {
+  3.707001798190772*^9, 3.7070018505005913`*^9}, {3.7070020829642363`*^9, 
+  3.707002132071349*^9}, {3.70700248817463*^9, 3.707002594136881*^9}, {
+  3.7070070313389025`*^9, 3.707007044573352*^9}, {3.707008000810236*^9, 
+  3.7070080009313364`*^9}, {3.7070092087362328`*^9, 3.707009252502796*^9}, {
+  3.707009293492773*^9, 3.70700935738634*^9}, {3.7070127776456795`*^9, 
+  3.707012902526683*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`f$$ = 10, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`f$$], 10, "Collision Interval (steps)"}, 1, 100, 1}},
+     Typeset`size$$ = {113., {1., 8.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True, $CellContext`f$1211$$ =
+     0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`f$$ = 10}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`f$$, $CellContext`f$1211$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Row[{"\[Lambda] = ", $CellContext`\[Lambda][
+          72 $CellContext`amu, ($CellContext`f$$ $CellContext`tstep) \
+$CellContext`ps]/$CellContext`nm, " nm"}], 
+      "Specifications" :> {{{$CellContext`f$$, 10, 
+          "Collision Interval (steps)"}, 1, 100, 1, Appearance -> "Labeled"}},
+       "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{457., {54., 59.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.707001174908215*^9, 3.7070011995367093`*^9}, 
+   3.7070012591116323`*^9, {3.707001803735194*^9, 3.7070018148944454`*^9}, 
+   3.707001851400195*^9, 3.7070025165841613`*^9, 3.7070025513833055`*^9, {
+   3.70700258389084*^9, 3.7070025946974835`*^9}, {3.707007032026105*^9, 
+   3.7070070401406355`*^9}, {3.707007984529975*^9, 3.7070080015854387`*^9}, {
+   3.7070092337272267`*^9, 3.707009253154999*^9}, {3.7070093308612404`*^9, 
+   3.707009358660245*^9}, 3.707009391078779*^9, 3.707012827311591*^9, 
+   3.7070128698586493`*^9, 3.7070129044925904`*^9}]
+}, {2}]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["SRD Solvent (Dynamic) Viscosity", "Section",
+ CellChangeTimes->{{3.707000942083438*^9, 3.7070009511066713`*^9}, 
+   3.707009192874874*^9, {3.707009468767478*^9, 3.707009471465089*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Use this to find the SRD viscosity for a given set of collision parameters.\
+\>", "Subsection",
+ CellChangeTimes->{{3.707011819948656*^9, 3.7070118675585537`*^9}, {
+  3.707011957148844*^9, 3.7070119773194256`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Row", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<\[Mu] = \>\"", ",", 
+      RowBox[{"\[Mu]", "[", 
+       RowBox[{
+        RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+        RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+        RowBox[{"n", " ", 
+         SuperscriptBox["a", "3"]}], ",", 
+        RowBox[{"72", "amu"}], ",", 
+        RowBox[{"a", " ", "nm"}]}], "]"}], ",", "\"\< cP\>\""}], "}"}], "]"}],
+    ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Alpha]", ",", "180", ",", "\"\<Collision Angle (deg)\>\""}], 
+      "}"}], ",", "10", ",", " ", "180", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", ",", "10", ",", "\"\<Collision Interval (steps)\>\""}], 
+      "}"}], ",", "1", ",", "50", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "2.0", ",", "\"\<Collision Size Size (nm)\>\""}], 
+      "}"}], ",", "0.5", ",", "4.0", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "n", ",", "2.5", ",", 
+       "\"\<SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))\>\""}], 
+      "}"}], ",", "1", ",", "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.666030842043283*^9, 3.666030842183285*^9}, {
+  3.707000954520784*^9, 3.707001035444087*^9}, {3.707001087820492*^9, 
+  3.7070011991129074`*^9}, {3.7070012542869134`*^9, 3.7070012583826294`*^9}, {
+  3.707001798190772*^9, 3.7070018505005913`*^9}, {3.7070020829642363`*^9, 
+  3.707002132071349*^9}, {3.70700248817463*^9, 3.707002594136881*^9}, {
+  3.7070070313389025`*^9, 3.707007044573352*^9}, {3.707008000810236*^9, 
+  3.7070080009313364`*^9}, {3.70700941319896*^9, 3.7070094433919716`*^9}, {
+  3.7071313923463554`*^9, 3.707131398970293*^9}, {3.7071314519937696`*^9, 
+  3.7071314558841963`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 2., $CellContext`f$$ = 
+    10, $CellContext`n$$ = 2.5, $CellContext`\[Alpha]$$ = 180, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`\[Alpha]$$], 180, "Collision Angle (deg)"}, 10, 
+      180}, {{
+       Hold[$CellContext`f$$], 10, "Collision Interval (steps)"}, 1, 50, 1}, {{
+       Hold[$CellContext`a$$], 2., "Collision Size Size (nm)"}, 0.5, 4.}, {{
+       Hold[$CellContext`n$$], 2.5, 
+       "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1}}, 
+    Typeset`size$$ = {105., {2., 8.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`\[Alpha]$4382$$ = 0, $CellContext`f$4383$$ = 
+    0, $CellContext`a$4384$$ = 0, $CellContext`n$4385$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 2., $CellContext`f$$ = 
+        10, $CellContext`n$$ = 2.5, $CellContext`\[Alpha]$$ = 180}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`\[Alpha]$$, $CellContext`\[Alpha]$4382$$, 0], 
+        Hold[$CellContext`f$$, $CellContext`f$4383$$, 0], 
+        Hold[$CellContext`a$$, $CellContext`a$4384$$, 0], 
+        Hold[$CellContext`n$$, $CellContext`n$4385$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Row[{"\[Mu] = ", 
+         $CellContext`\[Mu][$CellContext`\[Alpha]$$ $CellContext`deg, \
+$CellContext`f$$ $CellContext`tstep $CellContext`ps, $CellContext`n$$ \
+$CellContext`a$$^3, 72 $CellContext`amu, $CellContext`a$$ $CellContext`nm], 
+         " cP"}], 
+      "Specifications" :> {{{$CellContext`\[Alpha]$$, 180, 
+          "Collision Angle (deg)"}, 10, 180, Appearance -> 
+         "Labeled"}, {{$CellContext`f$$, 10, "Collision Interval (steps)"}, 1,
+          50, 1, Appearance -> 
+         "Labeled"}, {{$CellContext`a$$, 2., "Collision Size Size (nm)"}, 0.5,
+          4., Appearance -> 
+         "Labeled"}, {{$CellContext`n$$, 2.5, 
+          "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{457., {107., 112.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.707001174908215*^9, 3.7070011995367093`*^9}, 
+   3.7070012591116323`*^9, {3.707001803735194*^9, 3.7070018148944454`*^9}, 
+   3.707001851400195*^9, 3.7070025165841613`*^9, 3.7070025513833055`*^9, {
+   3.70700258389084*^9, 3.7070025946974835`*^9}, {3.707007032026105*^9, 
+   3.7070070401406355`*^9}, {3.707007984529975*^9, 3.7070080015854387`*^9}, {
+   3.7070094242257004`*^9, 3.7070094442713747`*^9}, 3.707131399814896*^9, {
+   3.7071314536152773`*^9, 3.7071314564497986`*^9}}]
+}, {2}]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Use this to view the SRD viscosity as a function of collision angle for a \
+given set of collision parameters.\
+\>", "Subsection",
+ CellChangeTimes->{{3.707011819948656*^9, 3.7070118675585537`*^9}, {
+  3.7070119877010684`*^9, 3.7070119987495136`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Manipulate", "[", 
+   RowBox[{
+    RowBox[{"Quiet", "[", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0.7", ",", 
+         RowBox[{"\[Mu]", "[", 
+          RowBox[{
+           RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+           RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+           RowBox[{"n", " ", 
+            SuperscriptBox["a", "3"]}], ",", 
+           RowBox[{"72", "amu"}], ",", 
+           RowBox[{"a", " ", "nm"}]}], "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"\[Alpha]", ",", "15", ",", "180"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ImageSize", "\[Rule]", "600"}], ",", 
+       RowBox[{"Axes", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"15", ",", "180"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", 
+            RowBox[{"Max", "[", 
+             RowBox[{"1.5", ",", 
+              RowBox[{"1.05", "*", 
+               RowBox[{"\[Mu]", "[", 
+                RowBox[{
+                 RowBox[{"180", " ", "deg"}], ",", 
+                 RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+                 RowBox[{"n", " ", 
+                  SuperscriptBox["a", "3"]}], ",", 
+                 RowBox[{"72", "amu"}], ",", 
+                 RowBox[{"a", " ", "nm"}]}], "]"}]}]}], "]"}]}], "}"}]}], 
+         "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"FontFamily", "\[Rule]", "\"\<Helvetica\>\""}], ",", 
+          RowBox[{"FontSize", "\[Rule]", "18"}]}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Blue", ",", 
+            RowBox[{"AbsoluteThickness", "[", "2", "]"}], ",", 
+            RowBox[{"Dashing", "[", "0.01", "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"Red", ",", 
+            RowBox[{"AbsoluteThickness", "[", "2", "]"}]}], "}"}]}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"GridLines", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+           "30", ",", "60", ",", "90", ",", "120", ",", "150", ",", "180"}], 
+           "}"}], ",", "Automatic"}], "}"}]}], ",", " ", 
+       RowBox[{"GridLinesStyle", "\[Rule]", 
+        RowBox[{"Directive", "[", 
+         RowBox[{"Gray", ",", "Dashed", ",", 
+          RowBox[{"AbsoluteDashing", "[", "3", "]"}], ",", 
+          RowBox[{"AbsoluteThickness", "[", "1", "]"}]}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+       RowBox[{"FrameStyle", "\[Rule]", 
+        RowBox[{"AbsoluteThickness", "[", "2", "]"}]}], ",", 
+       RowBox[{"FrameTicksStyle", "\[Rule]", " ", 
+        RowBox[{"Directive", "[", 
+         RowBox[{"AbsoluteThickness", "[", "2", "]"}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "30", ",", "60", ",", "90", ",", "120", ",", "150", ",", "180"}],
+              "}"}], ",", "None"}], "}"}]}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<Collision Angle (deg)\>\"", ",", "\"\<Viscosity (cP)\>\""}], 
+         "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Epilog", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"Style", "[", 
+            RowBox[{"\"\<Water at 310 K\>\"", ",", "18", ",", "Blue"}], "]"}],
+            ",", 
+           RowBox[{"{", 
+            RowBox[{"45", ",", " ", "0.75"}], "}"}]}], "]"}], "}"}]}]}], 
+      "]"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"f", ",", "10", ",", "\"\<Collision Interval (steps)\>\""}], 
+       "}"}], ",", "1", ",", "50", ",", "1", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"a", ",", "2.0", ",", "\"\<Collision Size Size (nm)\>\""}], 
+       "}"}], ",", "0.5", ",", "4.0", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "n", ",", "2.5", ",", 
+        "\"\<SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))\>\""}], 
+       "}"}], ",", "1", ",", "20", ",", "1", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], "]"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.707002619646389*^9, 3.7070026558293433`*^9}, {
+  3.7070030094576263`*^9, 3.7070030524996147`*^9}, {3.707007016456147*^9, 
+  3.7070070168474483`*^9}, {3.707007137460105*^9, 3.707007137664206*^9}, {
+  3.7070081845529213`*^9, 3.7070082048370967`*^9}, {3.7070082391122255`*^9, 
+  3.7070085030099106`*^9}, {3.7070085340230837`*^9, 3.707008583708274*^9}, {
+  3.7070086139956875`*^9, 3.707008726136906*^9}, {3.7070090413624077`*^9, 
+  3.7070091213300056`*^9}, {3.707009613132366*^9, 3.707009830574438*^9}, {
+  3.7070127516706696`*^9, 3.7070127567836924`*^9}, {3.7071312329702272`*^9, 
+  3.7071312787259707`*^9}, {3.7071314252453313`*^9, 3.7071314258742332`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 2., $CellContext`f$$ = 
+    10, $CellContext`n$$ = 2.5, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`f$$], 10, "Collision Interval (steps)"}, 1, 50, 1}, {{
+       Hold[$CellContext`a$$], 2., "Collision Size Size (nm)"}, 0.5, 4.}, {{
+       Hold[$CellContext`n$$], 2.5, 
+       "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1}}, 
+    Typeset`size$$ = {600., {186., 194.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True, $CellContext`f$4421$$ =
+     0, $CellContext`a$4422$$ = 0, $CellContext`n$4423$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 2., $CellContext`f$$ = 
+        10, $CellContext`n$$ = 2.5}, "ControllerVariables" :> {
+        Hold[$CellContext`f$$, $CellContext`f$4421$$, 0], 
+        Hold[$CellContext`a$$, $CellContext`a$4422$$, 0], 
+        Hold[$CellContext`n$$, $CellContext`n$4423$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Quiet[
+        Plot[{0.7, 
+          $CellContext`\[Mu][$CellContext`\[Alpha] $CellContext`deg, \
+$CellContext`f$$ $CellContext`tstep $CellContext`ps, $CellContext`n$$ \
+$CellContext`a$$^3, 
+           72 $CellContext`amu, $CellContext`a$$ $CellContext`nm]}, \
+{$CellContext`\[Alpha], 15, 180}, ImageSize -> 600, Axes -> None, 
+         PlotRange -> {{15, 180}, {0, 
+            Max[
+            1.5, 1.05 $CellContext`\[Mu][
+              180 $CellContext`deg, $CellContext`f$$ $CellContext`tstep \
+$CellContext`ps, $CellContext`n$$ $CellContext`a$$^3, 
+               72 $CellContext`amu, $CellContext`a$$ $CellContext`nm]]}}, 
+         BaseStyle -> {FontFamily -> "Helvetica", FontSize -> 18}, 
+         PlotStyle -> {{Blue, 
+            AbsoluteThickness[2], 
+            Dashing[0.01]}, {Red, 
+            AbsoluteThickness[2]}}, 
+         GridLines -> {{30, 60, 90, 120, 150, 180}, Automatic}, 
+         GridLinesStyle -> Directive[Gray, Dashed, 
+           AbsoluteDashing[3], 
+           AbsoluteThickness[1]], Frame -> True, FrameStyle -> 
+         AbsoluteThickness[2], FrameTicksStyle -> Directive[
+           AbsoluteThickness[2]], 
+         FrameTicks -> {{
+           Automatic, None}, {{30, 60, 90, 120, 150, 180}, None}}, 
+         FrameLabel -> {"Collision Angle (deg)", "Viscosity (cP)"}, Epilog -> {
+           Text[
+            Style["Water at 310 K", 18, Blue], {45, 0.75}]}]], 
+      "Specifications" :> {{{$CellContext`f$$, 10, 
+          "Collision Interval (steps)"}, 1, 50, 1, Appearance -> 
+         "Labeled"}, {{$CellContext`a$$, 2., "Collision Size Size (nm)"}, 0.5,
+          4., Appearance -> 
+         "Labeled"}, {{$CellContext`n$$, 2.5, 
+          "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{649., {272., 277.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.70700872711931*^9, {3.707009042404112*^9, 3.7070091217276077`*^9}, {
+   3.7070096423439827`*^9, 3.707009661402455*^9}, 3.7070096940081253`*^9, {
+   3.7070097304782615`*^9, 3.70700983097204*^9}, 3.707010598077787*^9, 
+   3.7070127598665056`*^9, 3.707131280080776*^9, 3.7071314282645493`*^9, 
+   3.707131464271632*^9}]
+}, {2}]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Use this to find collision angles that give a viscosity equal to water (if \
+any exist) for a given set of collision parameters.\
+\>", "Subsection",
+ CellChangeTimes->{{3.707011819948656*^9, 3.7070118675585537`*^9}, {
+  3.70701201744569*^9, 3.707012044331702*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Row", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<Collision angles that give 0.7 cP: \>\"", ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Quiet", "[", 
+       RowBox[{"Select", "[", 
+        RowBox[{
+         RowBox[{"\[Alpha]", "/.", 
+          RowBox[{"Solve", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"\[Mu]", "[", 
+              RowBox[{
+               RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+               RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+               RowBox[{"n", " ", 
+                SuperscriptBox["a", "3"]}], ",", 
+               RowBox[{"72", "amu"}], ",", 
+               RowBox[{"a", " ", "nm"}]}], "]"}], "\[Equal]", "0.7"}], ",", 
+            "\[Alpha]"}], "]"}]}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"Re", "@", "#"}], "\[GreaterEqual]", "15"}], "&&", 
+           RowBox[{
+            RowBox[{"Re", "@", "#"}], "\[LessEqual]", "180"}], "&&", 
+           RowBox[{
+            RowBox[{"Im", "@", "#"}], "\[Equal]", "0"}]}], "&"}]}], "]"}], 
+       "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", ",", "10", ",", "\"\<Collision Interval (steps)\>\""}], 
+      "}"}], ",", "1", ",", "50", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "2.0", ",", "\"\<Collision Size Size (nm)\>\""}], 
+      "}"}], ",", "0.5", ",", "4.0", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "n", ",", "3", ",", 
+       "\"\<SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))\>\""}], 
+      "}"}], ",", "1", ",", "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.707010660240238*^9, 3.7070106781061106`*^9}, {
+  3.707011147873688*^9, 3.707011165696765*^9}, {3.707011211768096*^9, 
+  3.7070112134039044`*^9}, {3.7070114967531843`*^9, 3.7070115134376483`*^9}, {
+  3.7070116609264617`*^9, 3.707011724386219*^9}, {3.707011768483123*^9, 
+  3.7070117864513965`*^9}, {3.7071314760693955`*^9, 3.7071314880864635`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 2., $CellContext`f$$ = 
+    10, $CellContext`n$$ = 3, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`f$$], 10, "Collision Interval (steps)"}, 1, 50, 1}, {{
+       Hold[$CellContext`a$$], 2., "Collision Size Size (nm)"}, 0.5, 4.}, {{
+       Hold[$CellContext`n$$], 3, 
+       "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1}}, 
+    Typeset`size$$ = {287., {2., 8.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True, $CellContext`f$4542$$ =
+     0, $CellContext`a$4543$$ = 0, $CellContext`n$4544$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 2., $CellContext`f$$ = 
+        10, $CellContext`n$$ = 3}, "ControllerVariables" :> {
+        Hold[$CellContext`f$$, $CellContext`f$4542$$, 0], 
+        Hold[$CellContext`a$$, $CellContext`a$4543$$, 0], 
+        Hold[$CellContext`n$$, $CellContext`n$4544$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Row[{"Collision angles that give 0.7 cP: ", 
+         Quiet[
+          Select[
+           ReplaceAll[$CellContext`\[Alpha], 
+            
+            Solve[$CellContext`\[Mu][$CellContext`\[Alpha] $CellContext`deg, \
+$CellContext`f$$ $CellContext`tstep $CellContext`ps, $CellContext`n$$ \
+$CellContext`a$$^3, 72 $CellContext`amu, $CellContext`a$$ $CellContext`nm] == 
+             0.7, $CellContext`\[Alpha]]], And[
+           Re[#] >= 15, Re[#] <= 180, Im[#] == 0]& ]]}], 
+      "Specifications" :> {{{$CellContext`f$$, 10, 
+          "Collision Interval (steps)"}, 1, 50, 1, Appearance -> 
+         "Labeled"}, {{$CellContext`a$$, 2., "Collision Size Size (nm)"}, 0.5,
+          4., Appearance -> 
+         "Labeled"}, {{$CellContext`n$$, 3, 
+          "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{457., {89., 94.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.7070106799141183`*^9, {3.7070111494341955`*^9, 3.707011166250367*^9}, 
+   3.707011213971507*^9, {3.7070114998134966`*^9, 3.707011515719159*^9}, 
+   3.707011564861466*^9, {3.707011662044966*^9, 3.707011690511981*^9}, 
+   3.7070117250258217`*^9, 3.707011789385508*^9, {3.7071314852784414`*^9, 
+   3.7071314883664646`*^9}}]
+}, {2}]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Hyrdodynamic Cutoff Length", "Section",
+ CellChangeTimes->{{3.7070003521044416`*^9, 3.707000363502584*^9}, {
+  3.7070005931105385`*^9, 3.707000595278847*^9}, {3.7070008254351015`*^9, 
+  3.707000842548766*^9}, {3.707006705528085*^9, 3.707006717293229*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Use this to find the SRD hydrodynamic cutoff length for a given set of \
+collision parameters.\
+\>", "Subsection",
+ CellChangeTimes->{{3.707011819948656*^9, 3.7070118675585537`*^9}, {
+  3.707011957148844*^9, 3.7070119773194256`*^9}, {3.7070121693863025`*^9, 
+  3.7070121709616117`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Row", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<\[Lambda]c = \>\"", ",", 
+      RowBox[{
+       RowBox[{"\[Lambda]c", "[", 
+        RowBox[{
+         RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+         RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+         RowBox[{"n", " ", 
+          SuperscriptBox["a", "3"]}], ",", 
+         RowBox[{"72", "amu"}], ",", 
+         RowBox[{"a", " ", "nm"}]}], "]"}], 
+       SuperscriptBox["nm", 
+        RowBox[{"-", "1"}]]}], ",", "\"\< nm\>\""}], "}"}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Alpha]", ",", "180", ",", "\"\<Collision Angle (deg)\>\""}], 
+      "}"}], ",", "10", ",", " ", "180", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", ",", "10", ",", "\"\<Collision Interval (steps)\>\""}], 
+      "}"}], ",", "1", ",", "100", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "2.0", ",", "\"\<Collision Size Size (nm)\>\""}], 
+      "}"}], ",", "0.5", ",", "4.0", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "n", ",", "2.5", ",", 
+       "\"\<SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))\>\""}], 
+      "}"}], ",", "1", ",", "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.707008918906848*^9, 3.7070089404997272`*^9}, {
+  3.707012074501826*^9, 3.7070120896542864`*^9}, {3.707131509809922*^9, 
+  3.707131529849745*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 2., $CellContext`f$$ = 
+    10, $CellContext`n$$ = 2.5, $CellContext`\[Alpha]$$ = 180, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`\[Alpha]$$], 180, "Collision Angle (deg)"}, 10, 
+      180}, {{
+       Hold[$CellContext`f$$], 10, "Collision Interval (steps)"}, 1, 100, 
+      1}, {{
+       Hold[$CellContext`a$$], 2., "Collision Size Size (nm)"}, 0.5, 4.}, {{
+       Hold[$CellContext`n$$], 2.5, 
+       "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1}}, 
+    Typeset`size$$ = {106., {1., 8.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`\[Alpha]$4719$$ = 0, $CellContext`f$4720$$ = 
+    0, $CellContext`a$4721$$ = 0, $CellContext`n$4722$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 2., $CellContext`f$$ = 
+        10, $CellContext`n$$ = 2.5, $CellContext`\[Alpha]$$ = 180}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`\[Alpha]$$, $CellContext`\[Alpha]$4719$$, 0], 
+        Hold[$CellContext`f$$, $CellContext`f$4720$$, 0], 
+        Hold[$CellContext`a$$, $CellContext`a$4721$$, 0], 
+        Hold[$CellContext`n$$, $CellContext`n$4722$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Row[{"\[Lambda]c = ", $CellContext`\[Lambda]c[$CellContext`\[Alpha]$$ \
+$CellContext`deg, $CellContext`f$$ $CellContext`tstep $CellContext`ps, \
+$CellContext`n$$ $CellContext`a$$^3, 
+           72 $CellContext`amu, $CellContext`a$$ \
+$CellContext`nm]/$CellContext`nm, " nm"}], 
+      "Specifications" :> {{{$CellContext`\[Alpha]$$, 180, 
+          "Collision Angle (deg)"}, 10, 180, Appearance -> 
+         "Labeled"}, {{$CellContext`f$$, 10, "Collision Interval (steps)"}, 1,
+          100, 1, Appearance -> 
+         "Labeled"}, {{$CellContext`a$$, 2., "Collision Size Size (nm)"}, 0.5,
+          4., Appearance -> 
+         "Labeled"}, {{$CellContext`n$$, 2.5, 
+          "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{457., {107., 112.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.7070089450722446`*^9, 3.7070089739438562`*^9}, 
+   3.707012090972392*^9, {3.707131514141651*^9, 3.7071315303688493`*^9}}]
+}, {2}]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Use this to view the SRD hydrodynamic cutoff length as a function of \
+collision angle for a given set of collision parameters.\
+\>", "Subsection",
+ CellChangeTimes->{{3.707011819948656*^9, 3.7070118675585537`*^9}, {
+  3.7070119877010684`*^9, 3.7070119987495136`*^9}, {3.7070121268781366`*^9, 
+  3.7070121376245785`*^9}, {3.707012172839819*^9, 3.707012173440221*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Quiet", "[", 
+    RowBox[{"LogLinearPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"\[Lambda]c", "[", 
+        RowBox[{
+         RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+         RowBox[{"f", "*", "tstep", " ", "ps"}], ",", 
+         RowBox[{"n", " ", 
+          SuperscriptBox["a", "3"]}], ",", 
+         RowBox[{"72", "amu"}], ",", 
+         RowBox[{"a", " ", "nm"}]}], "]"}], 
+       SuperscriptBox["nm", 
+        RowBox[{"-", "1"}]]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"f", ",", "1", ",", "1024"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "600"}], ",", 
+      RowBox[{"Axes", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"Automatic", ",", "Automatic"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", 
+           RowBox[{"Max", "[", 
+            RowBox[{"5", ",", 
+             RowBox[{"2", "*", 
+              RowBox[{"\[Lambda]c", "[", 
+               RowBox[{
+                RowBox[{"\[Alpha]", " ", "deg"}], ",", 
+                RowBox[{"tstep", " ", "ps"}], ",", 
+                RowBox[{"n", " ", 
+                 SuperscriptBox["a", "3"]}], ",", 
+                RowBox[{"72", "amu"}], ",", 
+                RowBox[{"a", " ", "nm"}]}], "]"}], 
+              SuperscriptBox["nm", 
+               RowBox[{"-", "1"}]]}]}], "]"}]}], "}"}]}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"BaseStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"FontFamily", "\[Rule]", "\"\<Helvetica\>\""}], ",", 
+         RowBox[{"FontSize", "\[Rule]", "18"}]}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Blue", ",", 
+         RowBox[{"AbsoluteThickness", "[", "2", "]"}]}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", " ", 
+      RowBox[{"GridLinesStyle", "\[Rule]", 
+       RowBox[{"Directive", "[", 
+        RowBox[{"Gray", ",", "Dashed", ",", 
+         RowBox[{"AbsoluteDashing", "[", "3", "]"}], ",", 
+         RowBox[{"AbsoluteThickness", "[", "1", "]"}]}], "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+      RowBox[{"FrameStyle", "\[Rule]", 
+       RowBox[{"AbsoluteThickness", "[", "2", "]"}]}], ",", 
+      RowBox[{"FrameTicksStyle", "\[Rule]", " ", 
+       RowBox[{"Directive", "[", 
+        RowBox[{"AbsoluteThickness", "[", "2", "]"}], "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"FrameLabel", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<Timesteps between Collisions\>\"", ",", 
+         "\"\<Cutoff Length  \!\(\*SubscriptBox[\(\[Lambda]\), \(c\)]\) \
+(nm)\>\""}], "}"}]}]}], "]"}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Alpha]", ",", "180", ",", "\"\<Collision Angle (deg)\>\""}], 
+      "}"}], ",", "10", ",", " ", "180", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "2.0", ",", "\"\<Collision Size Size (nm)\>\""}], 
+      "}"}], ",", "0.5", ",", "4.0", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "n", ",", "2.5", ",", 
+       "\"\<SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))\>\""}], 
+      "}"}], ",", "1", ",", "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.666019918348982*^9, 3.666020011507913*^9}, {
+  3.6660201826499166`*^9, 3.6660201854448214`*^9}, {3.6660202937037153`*^9, 
+  3.6660205445207667`*^9}, {3.666030872001243*^9, 3.66603090897921*^9}, {
+  3.6660309709976625`*^9, 3.6660310364611683`*^9}, {3.707006723414353*^9, 
+  3.7070067373353043`*^9}, {3.707006773400041*^9, 3.707006952686411*^9}, {
+  3.7070069968547754`*^9, 3.707007013284236*^9}, {3.707007124101455*^9, 
+  3.7070071546621685`*^9}, {3.7070071966134343`*^9, 3.707007197328037*^9}, {
+  3.707007260805981*^9, 3.7070073067078543`*^9}, {3.7070075452928734`*^9, 
+  3.7070075484566855`*^9}, {3.70700759245268*^9, 3.707007598780304*^9}, {
+  3.7070078398295164`*^9, 3.7070078715640383`*^9}, {3.7070087869965353`*^9, 
+  3.707008843261349*^9}, {3.707008954326681*^9, 3.707008954693083*^9}, {
+  3.7070121002886305`*^9, 3.707012106978958*^9}, {3.707131550234949*^9, 
+  3.707131566028963*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 2., $CellContext`n$$ = 
+    2.5, $CellContext`\[Alpha]$$ = 180, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`\[Alpha]$$], 180, "Collision Angle (deg)"}, 10, 
+      180}, {{
+       Hold[$CellContext`a$$], 2., "Collision Size Size (nm)"}, 0.5, 4.}, {{
+       Hold[$CellContext`n$$], 2.5, 
+       "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1}}, 
+    Typeset`size$$ = {600., {205., 212.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`\[Alpha]$26774$$ = 0, $CellContext`a$26775$$ = 
+    0, $CellContext`n$26776$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 2., $CellContext`n$$ = 
+        2.5, $CellContext`\[Alpha]$$ = 180}, "ControllerVariables" :> {
+        Hold[$CellContext`\[Alpha]$$, $CellContext`\[Alpha]$26774$$, 0], 
+        Hold[$CellContext`a$$, $CellContext`a$26775$$, 0], 
+        Hold[$CellContext`n$$, $CellContext`n$26776$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Quiet[
+        LogLinearPlot[$CellContext`\[Lambda]c[$CellContext`\[Alpha]$$ \
+$CellContext`deg, $CellContext`f $CellContext`tstep $CellContext`ps, \
+$CellContext`n$$ $CellContext`a$$^3, 
+           72 $CellContext`amu, $CellContext`a$$ \
+$CellContext`nm]/$CellContext`nm, {$CellContext`f, 1, 1024}, ImageSize -> 600,
+          Axes -> None, PlotRange -> {{Automatic, Automatic}, {0, 
+            Max[
+            5, 2 $CellContext`\[Lambda]c[$CellContext`\[Alpha]$$ \
+$CellContext`deg, $CellContext`tstep $CellContext`ps, $CellContext`n$$ \
+$CellContext`a$$^3, 
+               72 $CellContext`amu, $CellContext`a$$ \
+$CellContext`nm]/$CellContext`nm]}}, 
+         BaseStyle -> {FontFamily -> "Helvetica", FontSize -> 18}, 
+         PlotStyle -> {Blue, 
+           AbsoluteThickness[2]}, GridLines -> Automatic, GridLinesStyle -> 
+         Directive[Gray, Dashed, 
+           AbsoluteDashing[3], 
+           AbsoluteThickness[1]], Frame -> True, FrameStyle -> 
+         AbsoluteThickness[2], FrameTicksStyle -> Directive[
+           AbsoluteThickness[2]], 
+         FrameLabel -> {
+          "Timesteps between Collisions", 
+           "Cutoff Length  \!\(\*SubscriptBox[\(\[Lambda]\), \(c\)]\) \
+(nm)"}]], 
+      "Specifications" :> {{{$CellContext`\[Alpha]$$, 180, 
+          "Collision Angle (deg)"}, 10, 180, Appearance -> 
+         "Labeled"}, {{$CellContext`a$$, 2., "Collision Size Size (nm)"}, 0.5,
+          4., Appearance -> 
+         "Labeled"}, {{$CellContext`n$$, 2.5, 
+          "SRD Density (\!\(\*SuperscriptBox[\(nm\), \(-3\)]\))"}, 1, 20, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{649., {290., 295.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.6660203527067223`*^9, 3.6660205448976674`*^9}, {
+   3.6660308505334134`*^9, 3.666030883833925*^9}, 3.6660309168168306`*^9, {
+   3.666030949119827*^9, 3.6660310369836764`*^9}, 3.666031505531003*^9, {
+   3.707006724711958*^9, 3.7070067377666063`*^9}, {3.707006783289779*^9, 
+   3.707006868160696*^9}, {3.7070069224439983`*^9, 3.707006953744314*^9}, 
+   3.7070071559466734`*^9, 3.707007198550741*^9, {3.7070072657543*^9, 
+   3.7070073086601615`*^9}, 3.7070075497804904`*^9, {3.707007593146682*^9, 
+   3.707007599674808*^9}, {3.707007845488138*^9, 3.7070078722462406`*^9}, {
+   3.7070088193205566`*^9, 3.7070088439191513`*^9}, 3.7070089648211203`*^9, 
+   3.7070121075300603`*^9, {3.7071315667070675`*^9, 3.7071315956040254`*^9}}]
+}, {2}]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+AutoGeneratedPackage->None,
+InitializationCellEvaluation->True,
+InitializationCellWarning->False,
+WindowSize->{1902, 932},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"7.0 for Microsoft Windows (64-bit) (November 10, 2008)",
+StyleDefinitions->FrontEnd`FileName[{"Report"}, "AutomatedReport.nb", 
+  CharacterEncoding -> "WindowsANSI"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[567, 22, 111, 1, 73, "Title"],
+Cell[681, 25, 197, 2, 29, "Subtitle"],
+Cell[CellGroupData[{
+Cell[903, 31, 324, 4, 70, "Section"],
+Cell[1230, 37, 522, 12, 44, "Input",
+ InitializationCell->True]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1789, 54, 233, 3, 70, "Section"],
+Cell[2025, 59, 8921, 246, 596, "Input",
+ InitializationCell->True]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10983, 310, 154, 2, 70, "Section"],
+Cell[CellGroupData[{
+Cell[11162, 316, 1308, 29, 55, "Input"],
+Cell[12473, 347, 2268, 43, 122, "Output"]
+}, {2}]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14787, 396, 190, 2, 71, "Section"],
+Cell[CellGroupData[{
+Cell[15002, 402, 224, 4, 36, "Subsection"],
+Cell[CellGroupData[{
+Cell[15251, 410, 2243, 53, 116, "Input"],
+Cell[17497, 465, 3394, 61, 236, "Output"]
+}, {2}]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20937, 532, 261, 5, 36, "Subsection"],
+Cell[CellGroupData[{
+Cell[21223, 541, 5685, 136, 303, "Input"],
+Cell[26911, 679, 3999, 77, 566, "Output"]
+}, {2}]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30956, 762, 274, 5, 36, "Subsection"],
+Cell[CellGroupData[{
+Cell[31255, 771, 2398, 60, 118, "Input"],
+Cell[33656, 833, 3070, 59, 200, "Output"]
+}, {2}]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36784, 899, 261, 3, 71, "Section"],
+Cell[CellGroupData[{
+Cell[37070, 906, 296, 6, 36, "Subsection"],
+Cell[CellGroupData[{
+Cell[37391, 916, 1913, 50, 138, "Input"],
+Cell[39307, 968, 3075, 58, 236, "Output"]
+}, {2}]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42428, 1032, 377, 6, 36, "Subsection"],
+Cell[CellGroupData[{
+Cell[42830, 1042, 4717, 109, 242, "Input"],
+Cell[47550, 1153, 4273, 79, 602, "Output"]
+}, {2}]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

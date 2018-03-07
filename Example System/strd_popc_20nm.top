@@ -1,0 +1,11 @@
+#include "./top/strd_martini.itp"
+#include "./top/dry_martini_v2.1_lipids.itp"
+#include "./top/srd.itp"
+
+[ system ]
+20nm STRD POPC Membrane
+
+[ molecules ]
+POPC           676
+POPC           676
+SOL          25000

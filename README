@@ -1,0 +1,3 @@
+STRD Gromacs
+
+This is a modified version of Gromacs v5.0.1 featuring an efficient implementation of multi-particle collision dynamics. It was designed to supplement coarse-grained membrane simulations using the Dry Martini force field. Install it using the standard Gromacs instructions found in the Code directory. Check out the user guide for further information on running your own MPC simulations.
