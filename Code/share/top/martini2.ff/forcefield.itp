@@ -1,0 +1,7 @@
+#define _FF_MARTINI
+
+#include "martini_v2.0.itp"
+#include "martini_v2.0_lipids.itp"
+#include "martini_v2.0_cholesterol.itp"
+#include "martini_v2.0_solvents.itp"
+#include "martini_v2.0_ions.itp"
