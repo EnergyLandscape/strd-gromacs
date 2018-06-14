@@ -15,7 +15,7 @@ energygrp-excl  = Water Water Water non-Water
 ;;;;;;;;; MPC options
 
 mpc-type        = srd
-mpc-grps	    = Water PO4
+mpc-grps	      = Water PO4
 mpc-freq        = 10
 mpc-cellsize    = 2.0
 mpc-seed        = -1
@@ -60,10 +60,10 @@ rvdw                     = 1.2
 
 ;;;;;;;;; Temperature control
 
-tcoupl                   = v-rescale 
-tc-grps         	     = non-water water
-tau-t            	     = 4.0 -1
-ref-t            	     = 310 0
+tcoupl                   = no 
+tc-grps         	       = non-water water
+tau-t            	       = 4.0 -1
+ref-t            	       = 310 0
 
 gen_vel                  = no
 gen_temp                 = 310
